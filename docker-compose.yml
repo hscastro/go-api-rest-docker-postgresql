@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  go_db:
+    container_name: go_db
+    image: postgres:12
+    environment:
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+
+volumes:
+  pgdata: {}
+
+
+# versão do container do mysql
+#version: "3.9"
+
+#services:
+#  mysql_db:
+#    container_name: mysql_db
+#    image: mysql:8.0
+#    restart: always
+#    environment:
+#      MYSQL_ROOT_PASSWORD: 1234567
+#      MYSQL_DATABASE: db_test
+#      MYSQL_USER: admin
+#      MYSQL_PASSWORD: 1234567
+#    ports:
+#      - "3306:3306"
+#    volumes:
+#      - mysqldata:/var/lib/mysql
+#
+#volumes:
+#  mysqldata: {}
