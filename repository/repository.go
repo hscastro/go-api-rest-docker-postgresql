@@ -87,3 +87,42 @@ func (pr *ProductRepository) GetProductById(id_product int) (*model.Product, err
 	query.Close()
 	return &product, nil
 }
+
+func (pr *ProductRepository) DeleteProductById(idProduct int) error {
+
+	stmt, err := pr.connection.Prepare("DELETE FROM product WHERE id = $1")
+
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	result, err := stmt.Exec(idProduct)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return sql.ErrNoRows
+	}
+
+	return nil
+}
+
+func (pr *ProductRepository) UpdateProduct(product model.Product, idProduct int) (int, error) {
+	var id int
+	query := `UPDATE product SET name = $1, price = $2 WHERE id = $3 RETURNING id`
+
+	err := pr.connection.QueryRow(query, product.Name, product.Price, idProduct).Scan(&id)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
+}
